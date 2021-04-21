@@ -171,11 +171,44 @@ app.get('/catmax',(err,res)=>{
 })
 //lsit   order
 app.get('/orderlist',(err,res)=>{
-    sql=`select * from p_order_info limit 10`
+    sql=`select * from p_order_info where is_delete=0 limit 10`
     connection.query(sql,function (req,result) {
         res.send(result);
     })
 })
+//del order
+app.post('/delorder', function (req, res) {
+    var id = req.body.order_id || req.params.order_id;
+    connection.query("update p_order_info set is_delete=1 where order_id=" + id, function (err, rows) {
+        if (err) {
+            res.send('删除失败：' + err);
+
+        } else {
+            var data = {code:'200',code_decoration:'删除成功'};
+            res.send(data);
+        }
+    });
+});
+//查询一条数据 order
+app.get('/findorder', function (req, res) {
+    var id = req.body.id || req.query.id;
+    console.log(id)
+    connection.query("select * from p_order_info where order_id=" + id, function (err, rows) {
+        res.send(rows);
+
+    });
+});
+//update order
+app.post('/updorder', function (req, res) {
+    var param = req.body || req.params;
+    sql=    `update p_order_info set order_sn=${param.order_sn} ,consignee='${param.consignee}',user_id=${param.user_id} where order_id=${param.order_id}`
+    console.log(sql)
+    connection.query(sql, function (err, rows) {
+
+        res.send(rows);
+
+    });
+});
 var server = app.listen(8081, function () {
 
     console.log("服务启动成功！");
