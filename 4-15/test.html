@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.min.js"></script>
+    <script src="../axios.min.js"></script>
+
+</head>
+<body>
+    <table id="app" border="1">
+        <tr>
+            <td>商品id</td>
+            <td>商品名称</td>
+            <td>商品数量</td>
+            <td>操作</td>
+        </tr>
+        <tr v-for="item in goods">
+            <td>{{ item.goods_id}}</td>
+            <td>{{ item.goods_name }}</td>
+            <td>{{ item.goods_number }}</td>
+            <td>
+                <a href="javascript:;">修改</a>|
+                <a href="javascript:;">删除</a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+<script>
+    new Vue({
+        el:"#app",
+        data:{
+            goods:[]
+        },
+        created(){
+            _this=this
+            axios.get("http://localhost:8080/list").then(function (d) {
+//                console.log(d)
+                _this.goods=d.data
+            })
+        }
+    })
+</script>

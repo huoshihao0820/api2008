@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="axios.min.js"></script>
+    <script src="vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+
+<input type="text" v-model="name">
+<input type="text" v-model="password">
+<input type="button" @click="btn" value="添加">
+    <table  border="1">
+        <thead>
+        <tr>
+            <td>name</td>
+            <td>pwd</td>
+            <td>操作</td>
+        </tr>
+        </thead>
+        <tboby>
+            <tr v-for="(item,index) in goods">
+                <td>{{ item.name }}</td>
+                <td>{{ item.password }}</td>
+                <td>
+                    <a href="javascript:;" @click="upd(item.id)">修改</a>|
+                    <a href="javascript:;" @click="del(item.id)">删除</a>
+                </td>
+            </tr>
+        </tboby>
+    </table>
+</div>
+
+</body>
+</html>
+<script>
+    new Vue({
+        el:'#app',
+        data:{
+            name:'',
+            password:'',
+            goods:[]
+        },
+        methods:{
+            btn(){
+                _this=this
+                axios.get(`http://localhost:8082/add?name='${this.name}'&password='${this.password}'`).then(function (d) {
+                    if(d.code==200){
+//                        var book={}
+//                        book.name=this.name
+//                        book.password=this.password
+//                        this.name=""
+//                        this.password=""
+//                        this.goods=push(book)
+                    }else{
+
+                    }
+                    alert(d.data.msg)
+
+                    location=""
+
+                })
+            },
+            del(index){
+                axios.get(`http://localhost:8082/del?id=${index}`).then(function (d) {
+                    console.log(index)
+                    alert(d.data.msg)
+
+                    location=""
+                })
+            }
+        },
+        created(){  //生命周期钩子函数created
+            let _this=this    //当前的this是vue
+            axios.get('http://localhost:8082/list').then(function (d) {
+                _this.goods=d.data   //这边的this就是windows
+            })
+        }
+    })
+</script>
